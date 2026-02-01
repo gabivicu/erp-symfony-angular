@@ -1,0 +1,39 @@
+<div [class]="cardClasses()">
+  <!-- Header -->
+  @if (title || subtitle) {
+    <div class="mb-4">
+      @if (title) {
+        <h3 class="text-lg font-semibold text-neutral-900 mb-1">
+          @if (isLoadingValue) {
+            <app-skeleton-loader width="60%" height="1.5rem" />
+          } @else {
+            {{ title }}
+          }
+        </h3>
+      }
+      @if (subtitle) {
+        <p class="text-sm text-neutral-500">
+          @if (isLoadingValue) {
+            <app-skeleton-loader width="40%" height="1rem" />
+          } @else {
+            {{ subtitle }}
+          }
+        </p>
+      }
+    </div>
+  }
+
+  <!-- Content -->
+  <div>
+    @if (isLoadingValue) {
+      <!-- Skeleton Loading State -->
+      <div class="space-y-3">
+        <app-skeleton-loader height="1rem" />
+        <app-skeleton-loader width="90%" height="1rem" />
+        <app-skeleton-loader width="75%" height="1rem" />
+      </div>
+    } @else {
+      <ng-content />
+    }
+  </div>
+</div>
