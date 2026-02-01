@@ -19,6 +19,10 @@ npm install
 ng serve
 ```
 
+<<<<<<< HEAD
+=======
+```
+>>>>>>> 738fe527a269d2f390b6d3e43447b86c5bc6e576
 ## 🧪 Testing
 
 ### Backend
