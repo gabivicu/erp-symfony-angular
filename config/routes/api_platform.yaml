@@ -1,0 +1,8 @@
+# API Platform routes
+# Temporarily disabled - uncomment when you add #[ApiResource] attributes to entities
+# The XmlFileLoader error occurs because API Platform tries to scan for resources
+# but we don't have any #[ApiResource] attributes yet
+# api_platform:
+#     resource: .
+#     type: api_platform
+#     prefix: /api
