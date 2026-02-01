@@ -1,0 +1,92 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-neutral-900">Leads</h1>
+      <p class="text-neutral-500 mt-1">Manage your sales pipeline</p>
+    </div>
+    <app-button variant="primary" [routerLink]="['/crm/leads/new']">
+      New Lead
+    </app-button>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex gap-2">
+    <button
+      (click)="filterStatus = 'all'"
+      [class.bg-primary-600]="filterStatus === 'all'"
+      [class.text-white]="filterStatus === 'all'"
+      class="px-4 py-2 rounded-xl text-sm font-medium hover:bg-neutral-100"
+    >
+      All
+    </button>
+    <button
+      (click)="filterStatus = 'new'"
+      [class.bg-primary-600]="filterStatus === 'new'"
+      [class.text-white]="filterStatus === 'new'"
+      class="px-4 py-2 rounded-xl text-sm font-medium hover:bg-neutral-100"
+    >
+      New
+    </button>
+    <button
+      (click)="filterStatus = 'won'"
+      [class.bg-primary-600]="filterStatus === 'won'"
+      [class.text-white]="filterStatus === 'won'"
+      class="px-4 py-2 rounded-xl text-sm font-medium hover:bg-neutral-100"
+    >
+      Won
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of [1,2,3,4,5,6]; track $index) {
+        <app-card [isLoading]="true" />
+      }
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && leads.length === 0) {
+    <app-empty-state
+      icon="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+      title="No leads yet"
+      description="Get started by creating your first lead."
+      actionLabel="Create Lead"
+      actionRoute="/crm/leads/new"
+    />
+  }
+
+  <!-- Lead List -->
+  @if (!isLoading && leads.length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (lead of leads; track lead.id) {
+        <app-card [title]="lead.name" [subtitle]="lead.companyName">
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-neutral-500">Status</span>
+              <span
+                class="px-2 py-1 rounded-full text-xs font-medium"
+                [ngClass]="getStatusBadgeClass(lead.status)"
+              >
+                {{ lead.status | titlecase }}
+              </span>
+            </div>
+            <div>
+              <p class="text-sm text-neutral-600">{{ lead.email }}</p>
+            </div>
+            <div class="flex gap-2 pt-2">
+              <app-button variant="ghost" size="sm" [fullWidth]="true">
+                View
+              </app-button>
+              <app-button variant="primary" size="sm" [fullWidth]="true">
+                Convert
+              </app-button>
+            </div>
+          </div>
+        </app-card>
+      }
+    </div>
+  }
+</div>
