@@ -1,0 +1,103 @@
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-neutral-900">Dashboard</h1>
+      <p class="text-neutral-500 mt-1">Welcome back! Here's what's happening today.</p>
+    </div>
+    <app-button variant="primary" icon="plus">New Project</app-button>
+  </div>
+
+  <!-- Bento Grid - Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Revenue Card -->
+    <app-card title="Total Revenue" subtitle="This month" class="lg:col-span-1">
+      <div class="flex items-baseline">
+        <span class="text-3xl font-bold text-neutral-900">${{ stats.totalRevenue.toLocaleString() }}</span>
+        <span class="ml-2 text-sm font-medium text-accent-600">+12.5%</span>
+      </div>
+      <p class="text-sm text-neutral-500 mt-2">vs last month</p>
+    </app-card>
+
+    <!-- Active Projects -->
+    <app-card title="Active Projects" subtitle="In progress" class="lg:col-span-1">
+      <div class="flex items-baseline">
+        <span class="text-3xl font-bold text-neutral-900">{{ stats.activeProjects }}</span>
+      </div>
+      <p class="text-sm text-neutral-500 mt-2">3 due this week</p>
+    </app-card>
+
+    <!-- Pending Invoices -->
+    <app-card title="Pending Invoices" subtitle="Awaiting payment" class="lg:col-span-1">
+      <div class="flex items-baseline">
+        <span class="text-3xl font-bold text-neutral-900">{{ stats.pendingInvoices }}</span>
+      </div>
+      <p class="text-sm text-neutral-500 mt-2">$45,000 total</p>
+    </app-card>
+
+    <!-- Team Members -->
+    <app-card title="Team Members" subtitle="Active users" class="lg:col-span-1">
+      <div class="flex items-baseline">
+        <span class="text-3xl font-bold text-neutral-900">{{ stats.teamMembers }}</span>
+      </div>
+      <p class="text-sm text-neutral-500 mt-2">All active</p>
+    </app-card>
+  </div>
+
+  <!-- Bento Grid - Main Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Recent Activity (2 columns) -->
+    <app-card title="Recent Activity" subtitle="Latest updates" class="lg:col-span-2" [hoverable]="false">
+      <div class="space-y-4">
+        @for (activity of [1,2,3,4,5]; track $index) {
+          <div class="flex items-start space-x-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors">
+            <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+              <span class="text-primary-600 text-sm font-medium">A</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-neutral-900">New invoice created</p>
+              <p class="text-xs text-neutral-500 mt-1">2 hours ago</p>
+            </div>
+          </div>
+        }
+      </div>
+    </app-card>
+
+    <!-- Quick Actions (1 column) -->
+    <app-card title="Quick Actions" subtitle="Get started" class="lg:col-span-1" [hoverable]="false">
+      <div class="space-y-2">
+        <app-button variant="primary" size="md" [fullWidth]="true">
+          Create Invoice
+        </app-button>
+        <app-button variant="secondary" size="md" [fullWidth]="true">
+          New Project
+        </app-button>
+        <app-button variant="ghost" size="md" [fullWidth]="true">
+          Add Expense
+        </app-button>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Empty State Example -->
+  @if (false) {
+    <app-card class="text-center py-12">
+      <svg
+        class="w-16 h-16 text-neutral-300 mx-auto mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+      <h3 class="text-lg font-semibold text-neutral-900 mb-2">No invoices yet</h3>
+      <p class="text-neutral-500 mb-6">Get started by creating your first invoice.</p>
+      <app-button variant="primary">Create Invoice</app-button>
+    </app-card>
+  }
+</div>

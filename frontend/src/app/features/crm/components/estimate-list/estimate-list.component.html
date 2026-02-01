@@ -1,0 +1,66 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-neutral-900">Estimates</h1>
+      <p class="text-neutral-500 mt-1">Manage your quotes and proposals</p>
+    </div>
+    <app-button variant="primary" [routerLink]="['/crm/estimates/new']">
+      New Estimate
+    </app-button>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of [1,2,3]; track $index) {
+        <app-card [isLoading]="true" />
+      }
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && estimates.length === 0) {
+    <app-empty-state
+      icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+      title="No estimates yet"
+      description="Create your first estimate to get started."
+      actionLabel="Create Estimate"
+      actionRoute="/crm/estimates/new"
+    />
+  }
+
+  <!-- Estimate List -->
+  @if (!isLoading && estimates.length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (estimate of estimates; track estimate.id) {
+        <app-card
+          [title]="estimate.estimateNumber"
+          [subtitle]="'Total: ' + (estimate.total | currency:estimate.currency:'symbol':'1.2-2')"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-neutral-500">Status</span>
+              <span
+                class="px-2 py-1 rounded-full text-xs font-medium"
+                [ngClass]="getStatusBadgeClass(estimate.status)"
+              >
+                {{ estimate.status | titlecase }}
+              </span>
+            </div>
+            <div class="flex gap-2 pt-2">
+              <app-button variant="ghost" size="sm" [fullWidth]="true">
+                View
+              </app-button>
+              @if (estimate.status === 'accepted') {
+                <app-button variant="primary" size="sm" [fullWidth]="true">
+                  Convert to Project
+                </app-button>
+              }
+            </div>
+          </div>
+        </app-card>
+      }
+    </div>
+  }
+</div>
