@@ -4,30 +4,62 @@
     <app-button variant="primary">New Invoice</app-button>
   </div>
 
-  @if (isLoading) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (item of [1,2,3]; track $index) {
-        <app-card [isLoading]="true" />
-      }
-    </div>
-  }
+  @if (invoiceState$ | async; as state) {
+    @if (state.loading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (item of [1,2,3]; track $index) {
+          <app-card [isLoading]="true" />
+        }
+      </div>
+    }
 
-  @if (!isLoading && invoices.length === 0) {
-    <app-empty-state
-      icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-      title="No invoices yet"
-      description="Create your first invoice to get started."
-      actionLabel="Create Invoice"
-    />
-  }
+    @if (!state.loading && state.invoices.length === 0) {
+      <app-empty-state
+        icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        title="No invoices yet"
+        description="Create your first invoice to get started."
+        actionLabel="Create Invoice"
+      />
+    }
 
-  @if (!isLoading && invoices.length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (invoice of invoices; track invoice.id) {
-        <app-card [title]="invoice.invoiceNumber">
-          <!-- Invoice content -->
-        </app-card>
+    @if (!state.loading && state.invoices.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (invoice of state.invoices; track invoice.id) {
+          <app-card [title]="invoice.invoiceNumber" [subtitle]="invoice.clientName">
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-neutral-500">Status</span>
+                <span class="font-medium">{{ invoice.status }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-neutral-500">Total</span>
+                <span>{{ invoice.total | currency:invoice.currency:'symbol':'1.2-2' }}</span>
+              </div>
+              <p class="text-neutral-500 pt-1">{{ formatDate(invoice.createdAt) }}</p>
+            </div>
+          </app-card>
+        }
+      </div>
+
+      @if (state.hasMore) {
+        <div
+          appInfiniteScroll
+          (appInfiniteScrollLoad)="loadMore()"
+          class="flex flex-col items-center justify-center py-8 gap-3"
+        >
+          @if (state.loadingMore) {
+            <span class="text-sm text-neutral-500">Loading more...</span>
+          } @else {
+            <button
+              type="button"
+              (click)="loadMore()"
+              class="text-sm font-medium text-primary-600 hover:text-primary-700"
+            >
+              Load more
+            </button>
+          }
+        </div>
       }
-    </div>
+    }
   }
 </div>

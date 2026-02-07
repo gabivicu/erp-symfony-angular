@@ -1,10 +1,10 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <h1 class="text-3xl font-bold text-neutral-900">Expenses</h1>
-    <app-button variant="primary">New Expense</app-button>
+    <h1 class="text-3xl font-bold text-neutral-900">Recurring Invoices</h1>
+    <app-button variant="primary">New Recurring</app-button>
   </div>
 
-  @if (expenseState$ | async; as state) {
+  @if (recurringState$ | async; as state) {
     @if (state.loading) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (item of [1,2,3]; track $index) {
@@ -13,29 +13,27 @@
       </div>
     }
 
-    @if (!state.loading && state.expenses.length === 0) {
+    @if (!state.loading && state.items.length === 0) {
       <app-empty-state
-        icon="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-        title="No expenses yet"
-        description="Track your expenses and get reimbursed."
-        actionLabel="Create Expense"
+        icon="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+        title="No recurring invoices"
+        description="Set up recurring invoices for repeat billing."
+        actionLabel="New Recurring"
       />
     }
 
-    @if (!state.loading && state.expenses.length > 0) {
+    @if (!state.loading && state.items.length > 0) {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @for (expense of state.expenses; track expense.id) {
-          <app-card [title]="expense.description" [subtitle]="expense.projectName ?? 'No project'">
+        @for (item of state.items; track item.id) {
+          <app-card [title]="item.description" [subtitle]="item.frequency + ' · ' + (item.amount | currency:item.currency:'symbol':'1.2-2')">
             <div class="space-y-2 text-sm">
               <div class="flex justify-between">
-                <span class="text-neutral-500">Amount</span>
-                <span class="font-medium">{{ expense.amount | currency:expense.currency:'symbol':'1.2-2' }}</span>
-              </div>
-              <div class="flex justify-between">
                 <span class="text-neutral-500">Status</span>
-                <span>{{ expense.status }}</span>
+                <span [class.text-green-600]="item.isActive" [class.text-neutral-500]="!item.isActive">
+                  {{ item.isActive ? 'Active' : 'Inactive' }}
+                </span>
               </div>
-              <p class="text-neutral-500 pt-1">{{ formatDate(expense.expenseDate) }}</p>
+              <p class="text-neutral-500">Next: {{ formatDate(item.nextGenerationDate) }}</p>
             </div>
           </app-card>
         }
