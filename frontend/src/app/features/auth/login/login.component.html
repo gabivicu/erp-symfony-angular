@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-surface-50 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-2xl shadow-soft-2xl border border-neutral-200 p-8">
+      <h1 class="text-2xl font-bold text-neutral-900 mb-2">Conectare</h1>
+      <p class="text-neutral-500 text-sm mb-6">Introdu email și parola pentru a accesa aplicația.</p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+        @if (errorMessage()) {
+          <div class="rounded-lg bg-destructive-50 border border-destructive-200 px-4 py-3 text-sm text-destructive-700">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <div>
+          <label for="username" class="block text-sm font-medium text-neutral-700 mb-1">Email</label>
+          <input
+            id="username"
+            type="email"
+            formControlName="username"
+            autocomplete="username"
+            class="w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            placeholder="email@exemplu.com"
+          />
+          @if (form.get('username')?.invalid && form.get('username')?.touched) {
+            <p class="mt-1 text-sm text-destructive-600">Introdu un email valid.</p>
+          }
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-neutral-700 mb-1">Parolă</label>
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            class="w-full rounded-xl border border-neutral-200 px-4 py-2.5 text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            placeholder="••••••••"
+          />
+          @if (form.get('password')?.invalid && form.get('password')?.touched) {
+            <p class="mt-1 text-sm text-destructive-600">Parola este obligatorie (min. 4 caractere).</p>
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="w-full rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50"
+        >
+          @if (loading()) {
+            Se conectează...
+          } @else {
+            Conectare
+          }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
