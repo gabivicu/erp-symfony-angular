@@ -1,5 +1,4 @@
 <div class="space-y-6">
-  <!-- Header -->
   <div class="flex items-center justify-between">
     <div>
       <h1 class="text-3xl font-bold text-neutral-900">Projects</h1>
@@ -8,33 +7,48 @@
     <app-button variant="primary">New Project</app-button>
   </div>
 
-  <!-- Loading State -->
-  @if (isLoading) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (item of [1,2,3]; track $index) {
-        <app-card [isLoading]="true" />
-      }
-    </div>
-  }
+  @if (projectState$ | async; as state) {
+    @if (state.loading) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (item of [1,2,3]; track $index) {
+          <app-card [isLoading]="true" />
+        }
+      </div>
+    }
 
-  <!-- Empty State -->
-  @if (!isLoading && projects.length === 0) {
-    <app-empty-state
-      icon="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-      title="No projects yet"
-      description="Create your first project to get started."
-      actionLabel="Create Project"
-    />
-  }
+    @if (!state.loading && state.projects.length === 0) {
+      <app-empty-state
+        icon="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+        title="No projects yet"
+        description="Create your first project to get started."
+        actionLabel="Create Project"
+      />
+    }
 
-  <!-- Project List -->
-  @if (!isLoading && projects.length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (project of projects; track project.id) {
-        <app-card [title]="project.name" [subtitle]="project.code">
-          <!-- Project content -->
-        </app-card>
+    @if (!state.loading && state.projects.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (project of state.projects; track project.id) {
+          <app-card [title]="project.name" [subtitle]="project.code">
+            @if (project.companyName) {
+              <p class="text-sm text-neutral-500 mt-2">{{ project.companyName }}</p>
+            }
+          </app-card>
+        }
+      </div>
+
+      @if (state.hasMore) {
+        <div
+          appInfiniteScroll
+          (appInfiniteScrollLoad)="loadMore()"
+          class="flex flex-col items-center justify-center py-8 gap-3"
+        >
+          @if (state.loadingMore) {
+            <span class="text-sm text-neutral-500">Loading more...</span>
+          } @else {
+            <button type="button" (click)="loadMore()" class="text-sm font-medium text-primary-600 hover:text-primary-700">Load more</button>
+          }
+        </div>
       }
-    </div>
+    }
   }
 </div>

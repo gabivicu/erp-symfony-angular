@@ -4,16 +4,53 @@
     <app-button variant="primary">New Task</app-button>
   </div>
 
-  @if (isLoading) {
-    <app-card [isLoading]="true" />
-  }
+  @if (taskState$ | async; as state) {
+    @if (state.loading) {
+      <app-card [isLoading]="true" />
+    }
 
-  @if (!isLoading && tasks.length === 0) {
-    <app-empty-state
-      icon="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-      title="No tasks yet"
-      description="Create your first task to get started."
-      actionLabel="Create Task"
-    />
+    @if (!state.loading && state.tasks.length === 0) {
+      <app-empty-state
+        icon="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+        title="No tasks yet"
+        description="Create your first task to get started."
+        actionLabel="Create Task"
+      />
+    }
+
+    @if (!state.loading && state.tasks.length > 0) {
+      <app-card>
+        <ul class="divide-y divide-neutral-200">
+          @for (task of state.tasks; track task.id) {
+            <li class="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+              <div>
+                <p class="font-medium text-neutral-900">{{ task.title }}</p>
+                <p class="text-sm text-neutral-500">{{ task.projectName }}</p>
+              </div>
+              <span
+                class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                [class]="getStatusBadgeClass(task.status)"
+              >
+                {{ task.status }}
+              </span>
+            </li>
+          }
+        </ul>
+      </app-card>
+
+      @if (state.hasMore) {
+        <div
+          appInfiniteScroll
+          (appInfiniteScrollLoad)="loadMore()"
+          class="flex flex-col items-center justify-center py-8 gap-3"
+        >
+          @if (state.loadingMore) {
+            <span class="text-sm text-neutral-500">Loading more...</span>
+          } @else {
+            <button type="button" (click)="loadMore()" class="text-sm font-medium text-primary-600 hover:text-primary-700">Load more</button>
+          }
+        </div>
+      }
+    }
   }
 </div>
