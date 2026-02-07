@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# IDE / OS
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Frontend (backend image - keep image smaller)
+frontend/
+
+# Backend (frontend image ignores backend)
+# (frontend Dockerfile uses context ./frontend so backend not included)
+
+# Env / secrets
+.env.local
+.env.*.local
+
+# Symfony
+var/cache/*
+var/log/*
+!var/cache/.gitkeep
+!var/log/.gitkeep
+
+# Docker (backend image needs docker/backend/entrypoint.sh)
+docker/frontend/
+compose.yaml
+compose.override.yaml
